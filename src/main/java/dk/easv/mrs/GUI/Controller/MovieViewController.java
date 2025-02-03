@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class MovieViewController implements Initializable {
@@ -146,14 +147,13 @@ public class MovieViewController implements Initializable {
      * @param actionEvent
      */
     @FXML
-    private void onDelete(ActionEvent actionEvent) throws Exception {
+    private void onDelete(ActionEvent actionEvent) throws SQLException {
         Movie selectedMovie = tblMovies.getSelectionModel().getSelectedItem();
 
         if (selectedMovie != null)
         {
             // Delete movie in DAL layer (through the layers)
             movieModel.deleteMovie(selectedMovie);
-
         }
     }
 }

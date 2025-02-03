@@ -4,12 +4,11 @@ package dk.easv.mrs.BLL;
 import dk.easv.mrs.BE.Movie;
 import dk.easv.mrs.BLL.util.MovieSearcher;
 import dk.easv.mrs.DAL.IMovieDataAccess;
-import dk.easv.mrs.DAL.MovieDAO_File;
-import dk.easv.mrs.DAL.MovieDAO_Mock;
 import dk.easv.mrs.DAL.db.MovieDAO_DB;
 
 // Java imports
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class MovieManager {
@@ -18,8 +17,6 @@ public class MovieManager {
     private IMovieDataAccess movieDAO;
 
     public MovieManager() throws IOException {
-        //movieDAO = new MovieDAO_Mock();
-        //movieDAO = new MovieDAO_File();
         movieDAO = new MovieDAO_DB();
     }
 
@@ -55,10 +52,25 @@ public class MovieManager {
         return movieDAO.createMovie(newMovie);
     }
 
-    public void deleteMovie(Movie selectedMovie) throws Exception {
-        movieDAO.deleteMovie(selectedMovie);
+    /**
+     *
+     * @param selectedMovie
+     * @throws Exception
+     */
+    public void deleteMovie(Movie selectedMovie) throws SQLException {
+        try {
+            movieDAO.deleteMovie(selectedMovie);
+        }
+        catch (SQLException err) {
+            throw new SQLException("Could not delete movie.");
+        }
     }
 
+    /**
+     *
+     * @param updatedMovie
+     * @throws Exception
+     */
     public void updateMovie(Movie updatedMovie) throws Exception {
         movieDAO.updateMovie(updatedMovie);
     }

@@ -1,9 +1,10 @@
 package dk.easv.mrs.GUI.Model;
 import dk.easv.mrs.BE.Movie;
 import dk.easv.mrs.BLL.MovieManager;
-import dk.easv.mrs.DAL.MovieDAO_File;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.sql.SQLException;
 import java.util.List;
 
 public class MovieModel {
@@ -48,7 +49,7 @@ public class MovieModel {
     }
 
 
-    public void deleteMovie(Movie selectedMovie) throws Exception {
+    public void deleteMovie(Movie selectedMovie) throws SQLException {
         // delete movie in DAL layer (through the layers)
         movieManager.deleteMovie(selectedMovie);
 

@@ -17,7 +17,7 @@ public class MovieDAO_DB implements IMovieDataAccess {
     public MovieDAO_DB() throws IOException {}
 
     @Override
-    public List<Movie> getAllMovies() throws Exception {
+    public List<Movie> getAllMovies() throws SQLException {
 
         ArrayList<Movie> allMovies = new ArrayList<>();
 
@@ -40,21 +40,18 @@ public class MovieDAO_DB implements IMovieDataAccess {
                 allMovies.add(movie);
             }
             return allMovies;
-
         }
-
 
         catch (SQLException ex)
         {
-
             ex.printStackTrace();
-            throw new Exception("Could not get movies from database", ex);
+            throw new SQLException("Could not get movies from database", ex);
         }
     }
 
 
     @Override
-    public Movie createMovie(Movie movie) throws Exception {
+    public Movie createMovie(Movie movie) throws SQLException {
         String sql = "INSERT INTO dbo.Movie (Title,Year) VALUES (?,?);";
 
         // try-with-resources makes sure we close db connection etc.
@@ -85,7 +82,7 @@ public class MovieDAO_DB implements IMovieDataAccess {
         catch (SQLException ex)
         {
             ex.printStackTrace();
-            throw new Exception("Could not create movie", ex);
+            throw new SQLException("Could not create movie", ex);
         }
     }
 
@@ -141,7 +138,7 @@ public class MovieDAO_DB implements IMovieDataAccess {
 
 
     @Override
-    public void updateMovie(Movie movie) throws Exception {
+    public void updateMovie(Movie movie) throws SQLException {
         // SQL command
         String sql = "UPDATE dbo.Movie SET Title = ?, Year = ? WHERE ID = ?";
 
@@ -159,15 +156,15 @@ public class MovieDAO_DB implements IMovieDataAccess {
         catch (SQLException ex)
         {
             // fixme: optionally log to file, db etc.
-            throw new Exception("Could not get movies from database.", ex);
+            throw new SQLException("Could not get movies from database.", ex);
         }
     }
 
     @Override
-    public void deleteMovie(Movie movie) throws Exception {
+    public void deleteMovie(Movie movie) throws SQLException {
 
         // SQL command
-        String sql = "DELETE FROM dbo.Movie WHERE ID = ?;";
+        String sql = "DELETE2 FROM dbo.Movie WHERE ID = ?;";
 
         try (Connection conn = dbConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql))
@@ -181,7 +178,7 @@ public class MovieDAO_DB implements IMovieDataAccess {
         catch (SQLException ex)
         {
             // fixme: optionally log to file, db etc.
-            throw new Exception("Could not get movies from database.", ex);
+            throw new SQLException("Error deleting movie.");
         }
     }
 }
