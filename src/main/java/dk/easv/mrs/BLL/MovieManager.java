@@ -5,19 +5,19 @@ import dk.easv.mrs.BE.Movie;
 import dk.easv.mrs.BLL.util.MovieSearcher;
 import dk.easv.mrs.DAL.IMovieDataAccess;
 import dk.easv.mrs.DAL.db.MovieDAO_DB;
+import dk.easv.mrs.util.MRSException;
 
 // Java imports
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
+
 
 public class MovieManager {
 
     private MovieSearcher movieSearcher = new MovieSearcher();
     private IMovieDataAccess movieDAO;
 
-    public MovieManager() throws IOException {
-        movieDAO = new MovieDAO_DB();
+    public MovieManager() throws MRSException {
+        movieDAO = new MovieDAO_DB(); // we need this coupling to DAL
     }
 
     /**
@@ -25,7 +25,7 @@ public class MovieManager {
      * @return
      * @throws Exception
      */
-    public List<Movie> getAllMovies() throws Exception {
+    public List<Movie> getAllMovies() throws MRSException {
         return movieDAO.getAllMovies();
     }
 
@@ -36,42 +36,40 @@ public class MovieManager {
      * @return
      * @throws Exception
      */
-    public List<Movie> searchMovies(String query) throws Exception {
+    public List<Movie> searchMovies(String query) throws MRSException {
         List<Movie> allMovies = getAllMovies();
         List<Movie> searchResult = movieSearcher.search(allMovies, query);
         return searchResult;
     }
 
     /**
-     * Create a new movie in the data source
+     * Create a new movie in the DAL layer
      * @param newMovie
      * @return
      * @throws Exception
      */
-    public Movie createMovie(Movie newMovie) throws Exception {
+    public Movie createMovie(Movie newMovie) throws MRSException {
         return movieDAO.createMovie(newMovie);
     }
 
-    /**
-     *
-     * @param selectedMovie
-     * @throws Exception
-     */
-    public void deleteMovie(Movie selectedMovie) throws SQLException {
-        try {
-            movieDAO.deleteMovie(selectedMovie);
-        }
-        catch (SQLException err) {
-            throw new SQLException("Could not delete movie.");
-        }
-    }
+
 
     /**
-     *
+     * Update an existing movie in the DAL layer
      * @param updatedMovie
      * @throws Exception
      */
-    public void updateMovie(Movie updatedMovie) throws Exception {
+    public void updateMovie(Movie updatedMovie) throws MRSException {
         movieDAO.updateMovie(updatedMovie);
+    }
+
+
+    /**
+     * Delete an existing movie based on its id
+     * @param selectedMovie
+     * @throws Exception
+     */
+    public void deleteMovie(Movie selectedMovie) throws MRSException {
+        movieDAO.deleteMovie(selectedMovie);
     }
 }

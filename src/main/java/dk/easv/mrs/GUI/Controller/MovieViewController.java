@@ -1,25 +1,27 @@
 package dk.easv.mrs.GUI.Controller;
 
+// project imports
 import dk.easv.mrs.BE.Movie;
+import dk.easv.mrs.GUI.MessageHandler;
 import dk.easv.mrs.GUI.Model.MovieModel;
+import dk.easv.mrs.util.MRSException;
+
+// Java imports
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class MovieViewController implements Initializable {
 
-
-    public TextField txtMovieSearch;
-    public ListView<Movie> lstMovies;
+    @FXML
+    private TextField txtMovieSearch, txtTitle, txtYear;
 
     @FXML
-    private Button btnUpdate;
+    private Button btnClick;
 
     @FXML
     private TableView<Movie> tblMovies;
@@ -30,22 +32,31 @@ public class MovieViewController implements Initializable {
     @FXML
     private TableColumn<Movie, Integer> colYear;
 
+    // Keep a reference to the model
     private MovieModel movieModel;
 
-    @FXML
-    private TextField txtTitle, txtYear;
-
+    /**
+     * Constructor
+     */
     public MovieViewController()  {
-
         try {
             movieModel = new MovieModel();
-        } catch (Exception e) {
-            displayError(e);
-            e.printStackTrace();
+        } catch (MRSException e) {
+            MessageHandler.displayErrorAlertBox(e);
         }
     }
 
 
+    /**
+     *
+     * @param url
+     * The location used to resolve relative paths for the root object, or
+     * {@code null} if the location is not known.
+     *
+     * @param resourceBundle
+     * The resources used to localize the root object, or {@code null} if
+     * the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
@@ -53,9 +64,8 @@ public class MovieViewController implements Initializable {
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
 
-        // connect tableview + listview to the ObservableList
+        // connect tableview to the ObservableList
         tblMovies.setItems(movieModel.getObservableMovies());
-        lstMovies.setItems(movieModel.getObservableMovies());
 
         // table view listener (when user selects a movie in the tableview)
         tblMovies.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -64,50 +74,50 @@ public class MovieViewController implements Initializable {
                 txtTitle.setText(newValue.getTitle());
                 txtYear.setText(Integer.toString(newValue.getYear()));
 
-                btnUpdate.setDisable(false);
+                btnClick.setText("Update");
             }
             else {
                 txtTitle.setText("");
                 txtYear.setText("");
 
-                btnUpdate.setDisable(true);
+                btnClick.setText("Create");
             }
-
-
         });
-
-        // list view listener (when user selects a movie in the listview)
-        lstMovies.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            txtTitle.setText(newValue.getTitle());
-            txtYear.setText(Integer.toString(newValue.getYear()));
-        });
-
-
-
 
         // Listen to search input
         txtMovieSearch.textProperty().addListener((observableValue, oldValue, newValue) -> {
             try {
                 movieModel.searchMovie(newValue);
-            } catch (Exception e) {
-                displayError(e);
-                e.printStackTrace();
+            } catch (MRSException err) {
+                MessageHandler.displayErrorAlertBox(err);
             }
         });
-
     }
 
-    private void displayError(Throwable t)
-    {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Something went wrong");
-        alert.setHeaderText(t.getMessage());
-        alert.showAndWait();
-    }
-
+    /**
+     *
+     * @param actionEvent
+     */
     @FXML
-    private void onCreate(ActionEvent actionEvent) throws Exception {
+    private void onClick(ActionEvent actionEvent) {
 
+        Movie selectedMovie = tblMovies.getSelectionModel().getSelectedItem();
+
+        if (selectedMovie != null) {
+            // Update existing movie
+            updateMovie(selectedMovie);
+        }
+
+        else {
+            // Create new movie
+            createMovie();
+        }
+    }
+
+    /**
+     *
+     */
+    private void createMovie() {
         // get user movie data from UI
         String title = txtTitle.getText();
         int year = Integer.parseInt(txtYear.getText());
@@ -115,45 +125,56 @@ public class MovieViewController implements Initializable {
         // new movie object
         Movie newMovie = new Movie(-1, year, title);
 
-        // call model to create the movie in the dal
-        movieModel.createMovie(newMovie);
-    }
-
-    /**
-     *
-     * @param actionEvent
-     * @throws Exception
-     */
-    @FXML
-    private void onUpdate(ActionEvent actionEvent) throws Exception {
-        Movie selectedMovie = tblMovies.getSelectionModel().getSelectedItem();
-
-        if (selectedMovie != null) {
-            // update movie based on textfield inputs from user
-            selectedMovie.setTitle(txtTitle.getText());
-            selectedMovie.setYear(Integer.parseInt(txtYear.getText()));
-
-            // Update movie in DAL layer (through the layers)
-            movieModel.updateMovie(selectedMovie);
-
-            // ask controls to refresh their content
-            lstMovies.refresh();
-            tblMovies.refresh();
+        // Handle exception in the GUI layer
+        try {
+            // call model to create the movie in the dal
+            movieModel.createMovie(newMovie);
+        }
+        catch (MRSException err) {
+            MessageHandler.displayErrorAlertBox(err);
         }
     }
 
+
+    /**
+     *
+     * @param selectedMovie
+     */
+    private void updateMovie(Movie selectedMovie) {
+
+        // update movie based on textfield inputs from user
+        selectedMovie.setTitle(txtTitle.getText());
+        selectedMovie.setYear(Integer.parseInt(txtYear.getText()));
+
+        // Handle exception in the GUI layer
+        try {
+            // Update movie in DAL layer (through the layers)
+            movieModel.updateMovie(selectedMovie);
+        } catch (MRSException err) {
+            MessageHandler.displayErrorAlertBox(err);
+        }
+        // ask tableview to refresh their content
+        tblMovies.refresh();
+    }
+
     /**
      *
      * @param actionEvent
      */
     @FXML
-    private void onDelete(ActionEvent actionEvent) throws SQLException {
+    private void onDelete(ActionEvent actionEvent){
         Movie selectedMovie = tblMovies.getSelectionModel().getSelectedItem();
 
         if (selectedMovie != null)
         {
-            // Delete movie in DAL layer (through the layers)
-            movieModel.deleteMovie(selectedMovie);
+            // Handle exception in the GUI layer
+            try {
+                // Delete movie in DAL layer (through the layers)
+                movieModel.deleteMovie(selectedMovie);
+            }
+            catch (MRSException err) {
+                MessageHandler.displayErrorAlertBox(err);
+            }
         }
     }
 }
