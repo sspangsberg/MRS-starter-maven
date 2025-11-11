@@ -5,12 +5,14 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="507.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.mrs.GUI.Controller.MovieViewController">
+<AnchorPane prefHeight="507.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.mrs.GUI.Controller.MovieViewController">
    <children>
-      <ListView fx:id="lstMovies" layoutY="194.0" prefHeight="303.0" prefWidth="320.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="194.0" />
-      <TextField fx:id="txtMovieSearch" layoutX="10.0" layoutY="153.0" prefHeight="25.0" prefWidth="320.0" promptText="Search" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="153.0" />
+      <ListView fx:id="lstMovies" layoutY="231.0" prefHeight="266.0" prefWidth="320.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="231.0" />
+      <TextField fx:id="txtMovieSearch" layoutX="10.0" layoutY="198.0" prefHeight="25.0" prefWidth="320.0" promptText="Search" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="198.0" />
       <TextField fx:id="txtTitle" layoutX="20.0" layoutY="24.0" prefHeight="25.0" prefWidth="309.0" promptText="Movie title" />
       <TextField fx:id="txtYear" layoutX="20.0" layoutY="65.0" prefHeight="25.0" prefWidth="132.0" promptText="Movie year" />
       <Button fx:id="btnClick" layoutX="205.0" layoutY="65.0" mnemonicParsing="false" onAction="#btnHandleClick" prefHeight="25.0" prefWidth="121.0" text="Create" />
+      <Button layoutX="205.0" layoutY="98.0" mnemonicParsing="false" onAction="#btnHandleUpdate" prefHeight="25.0" prefWidth="121.0" text="Update" />
+      <Button layoutX="205.0" layoutY="132.0" mnemonicParsing="false" onAction="#btnHandleDelete" prefHeight="25.0" prefWidth="121.0" text="Delete" />
    </children>
 </AnchorPane>

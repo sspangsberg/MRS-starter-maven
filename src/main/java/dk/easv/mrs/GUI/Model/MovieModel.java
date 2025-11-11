@@ -36,4 +36,28 @@ public class MovieModel {
         moviesToBeViewed.add(movieCreated);
         return movieCreated;
     }
+
+    // update
+    public void updateMovie(Movie updatedMovie) throws Exception {
+        // update movie in DAL layer (through the layers)
+        movieManager.updateMovie(updatedMovie);
+
+        // update observable list (and UI)
+        //Movie m = moviesToBeViewed.get(moviesToBeViewed.indexOf(updatedMovie));
+
+        int indexInList = moviesToBeViewed.indexOf(updatedMovie);
+        moviesToBeViewed.set(indexInList, updatedMovie);
+
+        //m.setTitle(updatedMovie.getTitle());
+        //m.setYear(updatedMovie.getYear());
+    }
+
+    public void deleteMovie(Movie movieToBeDeleted) throws Exception {
+        // delete movie in DAL layer (through the layers)
+        movieManager.deleteMovie(movieToBeDeleted);
+
+        // remove from observable list (and UI)
+        moviesToBeViewed.remove(movieToBeDeleted);
+    }
+
 }
