@@ -2,6 +2,8 @@ package dk.easv.mrs.GUI.Controller;
 
 import dk.easv.mrs.BE.Movie;
 import dk.easv.mrs.GUI.Model.MovieModel;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -52,9 +54,8 @@ public class MovieViewController implements Initializable {
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
 
-        // connect tableview + listview to the ObservableList
+        // connect tableview to the ObservableList (FilteredList)
         tblMovies.setItems(movieModel.getObservableMovies());
-        lstMovies.setItems(movieModel.getObservableMovies());
 
         // table view listener (when user selects a movie in the tableview)
         tblMovies.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -71,29 +72,29 @@ public class MovieViewController implements Initializable {
 
                 btnUpdate.setDisable(true);
             }
-
-
         });
-
-        // list view listener (when user selects a movie in the listview)
-        lstMovies.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            txtTitle.setText(newValue.getTitle());
-            txtYear.setText(Integer.toString(newValue.getYear()));
-        });
-
-
-
 
         // Listen to search input
-        txtMovieSearch.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            try {
-                movieModel.searchMovie(newValue);
-            } catch (Exception e) {
-                displayError(e);
-                e.printStackTrace();
-            }
-        });
+        txtMovieSearch.textProperty().addListener((observableValue, oldValue, newValue) ->
+                {
+                    movieModel.getObservableMovies().setPredicate(movie -> {
 
+                        // If filter text is empty, display all movies.
+                        if (newValue == null || newValue.isEmpty()) {
+                            return true;
+                        }
+
+                        String lowerCaseFilter = newValue.toLowerCase();
+
+                        if (movie.getTitle().toLowerCase().contains(lowerCaseFilter)) {
+                            return true;
+                        } else return Integer.toString(movie.getYear()).contains(lowerCaseFilter);
+                    });
+                });
+
+        SortedList<Movie> sortedData = new SortedList<>(movieModel.getObservableMovies());
+        sortedData.comparatorProperty().bind(tblMovies.comparatorProperty());
+        tblMovies.setItems(sortedData);
     }
 
     private void displayError(Throwable t)
@@ -153,7 +154,6 @@ public class MovieViewController implements Initializable {
         {
             // Delete movie in DAL layer (through the layers)
             movieModel.deleteMovie(selectedMovie);
-
         }
     }
 }

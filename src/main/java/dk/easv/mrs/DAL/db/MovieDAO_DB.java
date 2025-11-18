@@ -26,6 +26,7 @@ public class MovieDAO_DB implements IMovieDataAccess {
              Statement stmt = conn.createStatement())
         {
             String sql = "SELECT * FROM dbo.Movie";
+
             ResultSet rs = stmt.executeQuery(sql);
 
             // Loop through rows from the database result set

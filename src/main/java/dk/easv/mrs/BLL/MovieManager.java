@@ -2,10 +2,7 @@ package dk.easv.mrs.BLL;
 
 // Project imports
 import dk.easv.mrs.BE.Movie;
-import dk.easv.mrs.BLL.util.MovieSearcher;
 import dk.easv.mrs.DAL.IMovieDataAccess;
-import dk.easv.mrs.DAL.MovieDAO_File;
-import dk.easv.mrs.DAL.MovieDAO_Mock;
 import dk.easv.mrs.DAL.db.MovieDAO_DB;
 
 // Java imports
@@ -14,7 +11,6 @@ import java.util.List;
 
 public class MovieManager {
 
-    private MovieSearcher movieSearcher = new MovieSearcher();
     private IMovieDataAccess movieDAO;
 
     public MovieManager() throws IOException {
@@ -32,18 +28,6 @@ public class MovieManager {
         return movieDAO.getAllMovies();
     }
 
-
-    /**
-     * Search functionality
-     * @param query
-     * @return
-     * @throws Exception
-     */
-    public List<Movie> searchMovies(String query) throws Exception {
-        List<Movie> allMovies = getAllMovies();
-        List<Movie> searchResult = movieSearcher.search(allMovies, query);
-        return searchResult;
-    }
 
     /**
      * Create a new movie in the data source
