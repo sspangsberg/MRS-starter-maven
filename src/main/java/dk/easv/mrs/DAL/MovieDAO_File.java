@@ -14,7 +14,7 @@ import dk.easv.mrs.BE.Movie;
 import static java.nio.file.StandardOpenOption.APPEND;
 
 
-public class MovieDAO_File implements IMovieDataAccess {
+public class MovieDAO_File implements IRepository<Movie> {
 
     // relative path
     private static final String MOVIES_FILE = "data/movie_titles.txt";
@@ -22,11 +22,8 @@ public class MovieDAO_File implements IMovieDataAccess {
 
     //The @Override annotation is not required, but is recommended for readability
     // and to force the compiler to check and generate error msg. if needed etc.
-    //@Override
-
-
-
-    public List<Movie> getAllMovies() throws IOException {
+    @Override
+    public List<Movie> getAll() throws IOException {
 
         // Read all lines from file
         List<String> lines = Files.readAllLines(filePath);
@@ -71,7 +68,7 @@ public class MovieDAO_File implements IMovieDataAccess {
 
 
     @Override
-    public Movie createMovie(Movie newMovie) throws Exception {
+    public Movie create(Movie newMovie) throws Exception {
 
         List<String> movies = Files.readAllLines(filePath);
 
@@ -93,10 +90,10 @@ public class MovieDAO_File implements IMovieDataAccess {
      * @throws Exception
      */
     @Override
-    public void updateMovie(Movie movie) throws Exception {
+    public void update(Movie movie) throws Exception {
     }
 
     @Override
-    public void deleteMovie(Movie movie) throws Exception {
+    public void delete(Movie movie) throws Exception {
     }
 }

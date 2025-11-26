@@ -1,11 +1,15 @@
 package dk.easv.mrs.BE;
 
+// Java imports
+import java.util.ArrayList;
+import java.util.List;
+
 public class Movie {
 
     private int id;
     private String title;
     private int year;
-
+    private List<Rating> ratings = new ArrayList<>();
 
     /**
      *
@@ -37,6 +41,11 @@ public class Movie {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+
+    public List<Rating> getRatings() {
+        return ratings;
     }
 
     @Override

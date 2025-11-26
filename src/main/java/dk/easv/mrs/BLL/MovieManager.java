@@ -2,7 +2,7 @@ package dk.easv.mrs.BLL;
 
 // Project imports
 import dk.easv.mrs.BE.Movie;
-import dk.easv.mrs.DAL.IMovieDataAccess;
+import dk.easv.mrs.DAL.IRepository;
 import dk.easv.mrs.DAL.db.MovieDAO_DB;
 
 // Java imports
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MovieManager {
 
-    private IMovieDataAccess movieDAO;
+    private IRepository<Movie> movieDAO;
 
     public MovieManager() throws IOException {
         //movieDAO = new MovieDAO_Mock();
@@ -25,9 +25,8 @@ public class MovieManager {
      * @throws Exception
      */
     public List<Movie> getAllMovies() throws Exception {
-        return movieDAO.getAllMovies();
+        return movieDAO.getAll();
     }
-
 
     /**
      * Create a new movie in the data source
@@ -36,14 +35,14 @@ public class MovieManager {
      * @throws Exception
      */
     public Movie createMovie(Movie newMovie) throws Exception {
-        return movieDAO.createMovie(newMovie);
+        return movieDAO.create(newMovie);
     }
 
     public void deleteMovie(Movie selectedMovie) throws Exception {
-        movieDAO.deleteMovie(selectedMovie);
+        movieDAO.delete(selectedMovie);
     }
 
     public void updateMovie(Movie updatedMovie) throws Exception {
-        movieDAO.updateMovie(updatedMovie);
+        movieDAO.update(updatedMovie);
     }
 }
