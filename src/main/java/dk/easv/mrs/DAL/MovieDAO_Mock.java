@@ -2,13 +2,14 @@ package dk.easv.mrs.DAL;
 
 // Project imports
 import dk.easv.mrs.BE.Movie;
+import dk.easv.mrs.BE.Rating;
 
 // Java imports
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MovieDAO_Mock implements IRepository<Movie> {
+public class MovieDAO_Mock implements IMovieRepository {
 
     private List<Movie> allMovies;
 
@@ -27,6 +28,11 @@ public class MovieDAO_Mock implements IRepository<Movie> {
     }
 
     @Override
+    public Movie getOne(Movie id) throws Exception {
+        return null;
+    }
+
+    @Override
     public Movie create(Movie newMovie) throws Exception {
         return null;
     }
@@ -41,4 +47,8 @@ public class MovieDAO_Mock implements IRepository<Movie> {
 
     }
 
+    @Override
+    public List<Rating> getRatingsForMovie(int movieId) throws Exception {
+        return null;
+    }
 }

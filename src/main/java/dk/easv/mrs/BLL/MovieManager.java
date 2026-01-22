@@ -2,6 +2,8 @@ package dk.easv.mrs.BLL;
 
 // Project imports
 import dk.easv.mrs.BE.Movie;
+import dk.easv.mrs.DAL.DALFacade;
+import dk.easv.mrs.DAL.IMovieRepository;
 import dk.easv.mrs.DAL.IRepository;
 import dk.easv.mrs.DAL.db.MovieDAO_DB;
 
@@ -11,12 +13,13 @@ import java.util.List;
 
 public class MovieManager {
 
-    private IRepository<Movie> movieDAO;
+    private IMovieRepository movieDAO;
 
-    public MovieManager() throws IOException {
+    public MovieManager(IMovieRepository movieDAO) {
+        this.movieDAO = movieDAO;
         //movieDAO = new MovieDAO_Mock();
         //movieDAO = new MovieDAO_File();
-        movieDAO = new MovieDAO_DB();
+        //movieDAO = new MovieDAO_DB();
     }
 
     /**

@@ -2,12 +2,25 @@ package dk.easv.mrs.BE;
 
 public class Rating {
 
-    private int userId, movieId, score;
+    private int ratingId, userId, movieId, score;
 
-    public Rating(int userId, int movieId, int score) {
-        this.userId = userId;
+    public Rating(int ratingId, int movieId, int userId, int score) {
+        this.ratingId = ratingId;
         this.movieId = movieId;
+        this.userId = userId;
         this.score = score;
+    }
+
+    public int getRatingId() {
+        return ratingId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getMovieId() {

@@ -1,14 +1,14 @@
 package dk.easv.mrs.GUI.Model;
+
+// Project imports
 import dk.easv.mrs.BE.Movie;
 import dk.easv.mrs.BLL.MovieManager;
-import dk.easv.mrs.DAL.MovieDAO_File;
+
+// Java imports
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MovieModel {
 
@@ -20,8 +20,8 @@ public class MovieModel {
      *
      * @throws Exception
      */
-    public MovieModel() throws Exception {
-        movieManager = new MovieManager();
+    public MovieModel(MovieManager movieManager) throws Exception {
+        this.movieManager = movieManager;
         moviesToBeViewed = FXCollections.observableArrayList();
         moviesToBeViewed.addAll(movieManager.getAllMovies());
         filteredList = new FilteredList<>(moviesToBeViewed);

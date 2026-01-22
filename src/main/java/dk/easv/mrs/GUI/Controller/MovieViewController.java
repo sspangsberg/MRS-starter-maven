@@ -1,101 +1,43 @@
 package dk.easv.mrs.GUI.Controller;
 
+// Project imports
 import dk.easv.mrs.BE.Movie;
+import dk.easv.mrs.GUI.Model.MRSModel;
 import dk.easv.mrs.GUI.Model.MovieModel;
-import javafx.collections.transformation.FilteredList;
+
+// Java imports
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
-public class MovieViewController implements Initializable {
+public class MovieViewController implements BaseController {
 
+    @FXML private Button btnUpdate;
+    @FXML private TableView<Movie> tblMovies;
+    @FXML private TableColumn<Movie, String> colTitle;
+    @FXML private TableColumn<Movie, Integer> colYear;
+    @FXML private TextField txtMovieSearch, txtTitle, txtYear;
 
-    public TextField txtMovieSearch;
-    public ListView<Movie> lstMovies;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private TableView<Movie> tblMovies;
-
-    @FXML
-    private TableColumn<Movie, String> colTitle;
-
-    @FXML
-    private TableColumn<Movie, Integer> colYear;
-
+    private MRSModel mrsModel;
     private MovieModel movieModel;
 
-    @FXML
-    private TextField txtTitle, txtYear;
-
-    public MovieViewController()  {
-
+    /**
+     *
+     * @param mrsModel
+     */
+    public void setModel(MRSModel mrsModel) {
         try {
-            movieModel = new MovieModel();
+            this.mrsModel = mrsModel;
+            this.movieModel = mrsModel.getMovieModel();
         } catch (Exception e) {
             displayError(e);
             e.printStackTrace();
         }
     }
 
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle)
-    {
-        // setup columns in tableview
-        colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
-        colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
-
-        // connect tableview to the ObservableList (FilteredList)
-        tblMovies.setItems(movieModel.getObservableMovies());
-
-        // table view listener (when user selects a movie in the tableview)
-        tblMovies.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-
-            if (newValue != null) {
-                txtTitle.setText(newValue.getTitle());
-                txtYear.setText(Integer.toString(newValue.getYear()));
-
-                btnUpdate.setDisable(false);
-            }
-            else {
-                txtTitle.setText("");
-                txtYear.setText("");
-
-                btnUpdate.setDisable(true);
-            }
-        });
-
-        // Listen to search input
-        txtMovieSearch.textProperty().addListener((observableValue, oldValue, newValue) ->
-                {
-                    movieModel.getObservableMovies().setPredicate(movie -> {
-
-                        // If filter text is empty, display all movies.
-                        if (newValue == null || newValue.isEmpty()) {
-                            return true;
-                        }
-
-                        String lowerCaseFilter = newValue.toLowerCase();
-
-                        if (movie.getTitle().toLowerCase().contains(lowerCaseFilter)) {
-                            return true;
-                        } else return Integer.toString(movie.getYear()).contains(lowerCaseFilter);
-                    });
-                });
-
-        SortedList<Movie> sortedData = new SortedList<>(movieModel.getObservableMovies());
-        sortedData.comparatorProperty().bind(tblMovies.comparatorProperty());
-        tblMovies.setItems(sortedData);
-    }
 
     private void displayError(Throwable t)
     {
@@ -137,7 +79,7 @@ public class MovieViewController implements Initializable {
             movieModel.updateMovie(selectedMovie);
 
             // ask controls to refresh their content
-            lstMovies.refresh();
+            //lstMovies.refresh();
             tblMovies.refresh();
         }
     }
@@ -156,4 +98,57 @@ public class MovieViewController implements Initializable {
             movieModel.deleteMovie(selectedMovie);
         }
     }
+
+
+    @Override
+    public void setup() {
+
+        // setup columns in tableview
+        colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
+
+        // connect tableview to the ObservableList (FilteredList)
+        tblMovies.setItems(movieModel.getObservableMovies());
+
+        // table view listener (when user selects a movie in the tableview)
+        tblMovies.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (newValue != null) {
+                txtTitle.setText(newValue.getTitle());
+                txtYear.setText(Integer.toString(newValue.getYear()));
+
+                btnUpdate.setDisable(false);
+            }
+            else {
+                txtTitle.setText("");
+                txtYear.setText("");
+
+                btnUpdate.setDisable(true);
+            }
+        });
+
+        // Listen to search input
+        txtMovieSearch.textProperty().addListener((observableValue, oldValue, newValue) ->
+        {
+
+            movieModel.getObservableMovies().setPredicate(movie -> {
+
+                // If filter text is empty, display all movies.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (movie.getTitle().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else return Integer.toString(movie.getYear()).contains(lowerCaseFilter);
+            });
+        });
+
+        SortedList<Movie> sortedData = new SortedList<>(movieModel.getObservableMovies());
+        sortedData.comparatorProperty().bind(tblMovies.comparatorProperty());
+        tblMovies.setItems(sortedData);
+    }
+
 }

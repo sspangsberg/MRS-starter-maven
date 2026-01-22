@@ -1,7 +1,5 @@
 package dk.easv.mrs.DAL;
 
-// Project imports
-
 // Java imports
 import java.util.List;
 
@@ -11,6 +9,7 @@ import java.util.List;
 public interface IRepository<T> {
 
     List<T> getAll() throws Exception;
+    T getOne(T id) throws Exception;
     T create(T objectToBeCreated) throws Exception;
     void update(T objectToUpdated) throws Exception;
     void delete(T objectToBeDeleted) throws Exception;

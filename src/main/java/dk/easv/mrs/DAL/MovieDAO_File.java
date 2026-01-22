@@ -10,11 +10,12 @@ import java.util.List;
 
 // Project imports
 import dk.easv.mrs.BE.Movie;
+import dk.easv.mrs.BE.Rating;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 
 
-public class MovieDAO_File implements IRepository<Movie> {
+public class MovieDAO_File implements IMovieRepository {
 
     // relative path
     private static final String MOVIES_FILE = "data/movie_titles.txt";
@@ -66,6 +67,10 @@ public class MovieDAO_File implements IRepository<Movie> {
 
     }
 
+    @Override
+    public Movie getOne(Movie id) throws Exception {
+        return null;
+    }
 
     @Override
     public Movie create(Movie newMovie) throws Exception {
@@ -95,5 +100,10 @@ public class MovieDAO_File implements IRepository<Movie> {
 
     @Override
     public void delete(Movie movie) throws Exception {
+    }
+
+    @Override
+    public List<Rating> getRatingsForMovie(int movieId) throws Exception {
+        return null;
     }
 }
